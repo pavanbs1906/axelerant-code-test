@@ -1,0 +1,6 @@
+name: Axelerant Coding test
+description: Alter exising site information and to send node response for page content type.
+type: module
+package: custom
+core_version_requirement: ^8 || ^9
+configure: system.site_information_settings

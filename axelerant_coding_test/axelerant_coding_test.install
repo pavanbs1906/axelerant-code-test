@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_uninstall().
+ * Deleting configuration when module uninstalled.
+ */
+function axelerant_coding_test_uninstall() {
+  \Drupal::configFactory()->getEditable('axelerant_coding_test.settings')->delete();
+}

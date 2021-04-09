@@ -1,0 +1,7 @@
+{
+  "name": "drupal/axelerant_coding_test",
+  "type": "drupal-module",
+  "description": "Alter exising site information and to send node response for page content type.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+}

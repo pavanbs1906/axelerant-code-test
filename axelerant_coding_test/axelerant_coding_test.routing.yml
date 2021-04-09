@@ -1,0 +1,7 @@
+axelerant_coding_test.get_json_representation:
+  path: '/page_json/{site_api_key}/{node_id}'
+  defaults:
+    _controller: '\Drupal\axelerant_coding_test\Controller\GetJsonRepresentation::printJsonRespnse'
+    _title: 'Get Json Representation'
+  requirements:
+    _custom_access: '\Drupal\axelerant_coding_test\Controller\GetJsonRepresentation::access'

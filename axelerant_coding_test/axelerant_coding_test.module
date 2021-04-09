@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter
+ * We have made site_api_key value as "No API Key yet" by default at the time of module install but if new key added it will be updated with latest key.
+ */
+function axelerant_coding_test_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == "system_site_information_settings") {
+    $site_api_config = \Drupal::config('axelerant_coding_test.settings')->get('siteapikey');
+    if ($site_api_config == "No API Key yet") {
+      $default_site_api_value = "No API Key yet";
+      $save_config_message = "Save configuration";
+    }
+    else {
+      $default_site_api_value = $site_api_config;
+      $save_config_message = "Update Configuration";
+    }
+    // Adding new form element to site information.
+    $form['site_information']['site_api_key'] = [
+      '#title' => t('Site Api key'),
+      '#description' => t('Please enter the site api key value.'),
+      '#type' => 'textfield',
+      '#maxlength' => 255,
+      '#default_value' => $default_site_api_value,
+    ];
+    $form['actions']['submit']['#value'] = t($save_config_message);
+    // We call our custom form submit, after parent form submit is triggered by drupal.
+    $form['#submit'][] = 'saving_api_key_value';
+  }
+}
+
+/**
+ * We are setting api key value when form is submitted.
+ * If no value submitted, we are saving default value as No API Key yet.
+ * When site api key value added, we delete config message and show custom message to user.
+ * Empty value not stored instead we show defalut value as No API Key yet.
+ * value stored in config which we have defined in config/schema.
+ */
+function saving_api_key_value(&$form, FormStateInterface $form_state) {
+  $get_api_config_value = $form_state->getValue('site_api_key');
+  $load_config = \Drupal::configFactory()->getEditable('axelerant_coding_test.settings');
+  if (empty($get_api_config_value) || ctype_space($get_api_config_value) || $get_api_config_value == "No API Key yet") {
+    $load_config->set('siteapikey', 'No API Key yet');
+  }
+  else {
+    $message_name = 'Site API Key has been saved with: ' . $get_api_config_value;
+    \Drupal::messenger()->addStatus($message_name);
+    $load_config->set('siteapikey', trim($get_api_config_value));
+  }
+  $load_config->save();
+}
